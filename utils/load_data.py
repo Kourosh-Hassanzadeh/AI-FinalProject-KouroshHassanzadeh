@@ -1,7 +1,7 @@
 import cv2
 import os
 
-def load_data(path):
+def load_data(path, rgb=False):
     """
     Load an image from the given file path in grayscale mode.
 
@@ -12,11 +12,14 @@ def load_data(path):
         numpy.ndarray: Grayscale image as a NumPy array.
                        Returns None if the image cannot be loaded.
     """
-    gray_img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-    
-    return gray_img
+    if rgb:
+        img = cv2.imread(path)
+    else:
+        img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+        
+    return img
 
-def load_dataSet(path):
+def load_dataSet(path, rgb=False):
     """
     Load all images from a specified directory.
 
@@ -37,7 +40,7 @@ def load_dataSet(path):
     images = []
     for file in os.listdir(path):
         img_path = os.path.join(path, file)
-        img = load_data(img_path)
+        img = load_data(img_path, rgb)
         images.append(img)
         
     return images

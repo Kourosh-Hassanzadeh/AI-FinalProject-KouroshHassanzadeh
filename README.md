@@ -25,7 +25,7 @@ pip install -r requirements.txt
 # EDA Analysis
 
 ```
-python utils/eda/eda.py
+python utils\eda\eda.py
 ```
 
 The outputs will be saved beside the script.
@@ -68,3 +68,29 @@ s&p + median:
 gaussian + bilateral:
 
 ![results/gaussian_bilateral.png](results/gaussian_bilateral.png)
+
+# Edge Detection
+
+Applying prewitt, kirsch, Marr_Hildreth, canny Algorithms.
+
+```
+pyton src\edge_detection.py
+```
+
+results:
+
+prewitt:
+
+![results/prewitt.png](results/prewitt.png)
+
+kirsch:
+
+![results/kirsch.png](results/kirsch.png)
+
+Marr_Hildreth:
+
+![alt text](results/Marr_Hildreth.png)
+
+canny:
+
+![results/canny.png](results/canny.png)
