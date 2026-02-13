@@ -170,3 +170,22 @@ final epoch result:
 
 `loss: 0.0071 - val_loss: 0.0072`
 
+
+# Evaluation:
+
+```
+python src\AutoEncoder\evaluate.py
+```
+
+metrics for test data:
+
+```
+MSE      : 0.007488
+MAE      : 0.047937
+PSNR mean: 21.6279
+SSIM mean: 0.7586
+```
+
+![src/AutoEncoder/reconstructed.png](src/AutoEncoder/reconstructed.png)
+
+The first row contains original images. the second row contains noisy image and the third row contains reconstructed images.
