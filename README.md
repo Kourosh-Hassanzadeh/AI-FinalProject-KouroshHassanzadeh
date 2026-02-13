@@ -160,6 +160,8 @@ model architecture:
 
 ![src/AutoEncoder/autoencoder_architecture.png](src/AutoEncoder/autoencoder_architecture.png)
 
+![alt text](src/AutoEncoder/architecture.png)
+
 we trained it `Adam` optimizer and `MSE` loss function. we trained the model within 10 epochs with early stopping.
 
 ```
