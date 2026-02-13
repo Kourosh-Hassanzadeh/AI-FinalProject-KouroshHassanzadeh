@@ -115,3 +115,31 @@ k = 16:
 k = 32:
 
 ![results/kmeans_32.png](results/kmeans_32.png)
+
+# Thresholding
+
+Applying simple threshold, adaptive mean threshold, adaptive gaussian threshold, otsu threshold
+
+```
+python src\thresholding.py
+```
+
+results:
+
+![results/thresholding.png](results/thresholding.png)
+
+# Histogram Analysis
+
+Applying hog
+
+```
+python src\histogram.py
+```
+
+results:
+
+![results/hog1.png](results/hog1.png)
+
+![results/hog2.png](results/hog2.png)
+
+![results/hog3.png](results/hog3.png)
