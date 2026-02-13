@@ -8,24 +8,82 @@ from utils.plot import plot_images
 
 
 def average_filter(img, kernel_size):
+    """
+    Apply a mean (average) spatial filter to an image.
+
+    Parameters
+    ----------
+    img : numpy.ndarray
+        Input grayscale image.
+    kernel_size : int
+        Size of the square averaging kernel.
+
+    Returns
+    -------
+    numpy.ndarray
+        Smoothed image after applying average filtering.
+    """
     mean_filtered = cv2.blur(img, (kernel_size, kernel_size))
 
     return mean_filtered
 
 
 def gaussian_filter(img, kernel_size):
+    """
+    Apply a Gaussian spatial filter to an image.
+
+    Parameters
+    ----------
+    img : numpy.ndarray
+        Input grayscale image.
+    kernel_size : int
+        Size of the Gaussian kernel (must be odd).
+
+    Returns
+    -------
+    numpy.ndarray
+        Smoothed image after Gaussian filtering.
+    """
     gaussian_filtered = cv2.GaussianBlur(
         img, (kernel_size, kernel_size), sigmaX=1.0)
     return gaussian_filtered
 
 
 def median_filter(img, kernel_size):
+    """
+    Apply a median filter to reduce noise in an image.
+
+    Parameters
+    ----------
+    img : numpy.ndarray
+        Input grayscale image.
+    kernel_size : int
+        Size of the median kernel (must be odd).
+
+    Returns
+    -------
+    numpy.ndarray
+        Image after median filtering.
+    """
     median_filtered = cv2.medianBlur(img, kernel_size)
 
     return median_filtered
 
 
 def sharpening_filter(img):
+    """
+    Apply a sharpening filter using a predefined kernel.
+
+    Parameters
+    ----------
+    img : numpy.ndarray
+        Input grayscale image.
+
+    Returns
+    -------
+    numpy.ndarray
+        Sharpened image.
+    """
     kernel_sharpen = np.array([[0, -1, 0],
                                [-1, 5, -1],
                                [0, -1, 0]])
@@ -34,6 +92,19 @@ def sharpening_filter(img):
 
 
 def sobel_filter(img):
+    """
+    Apply Sobel edge detection in both x and y directions.
+
+    Parameters
+    ----------
+    img : numpy.ndarray
+        Input grayscale image.
+
+    Returns
+    -------
+    numpy.ndarray
+        Gradient magnitude image obtained using Sobel operator.
+    """
     sobel_x = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)
     sobel_y = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3)
     sobel_combined = cv2.magnitude(sobel_x, sobel_y)
@@ -42,6 +113,19 @@ def sobel_filter(img):
 
 
 def frequency_filters(img):
+    """
+    Apply Gaussian low-pass and high-pass filters in the frequency domain.
+
+    Parameters
+    ----------
+    img : numpy.ndarray
+        Input grayscale image.
+
+    Returns
+    -------
+    tuple of numpy.ndarray
+        (low_pass_filtered_image, high_pass_filtered_image)
+    """
     # FFT and Shift
     f = np.fft.fft2(img)
     fshift = np.fft.fftshift(f)
