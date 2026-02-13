@@ -74,7 +74,7 @@ gaussian + bilateral:
 Applying prewitt, kirsch, Marr_Hildreth, canny Algorithms.
 
 ```
-pyton src\edge_detection.py
+python src\edge_detection.py
 ```
 
 results:
@@ -94,3 +94,24 @@ Marr_Hildreth:
 canny:
 
 ![results/canny.png](results/canny.png)
+
+
+# Segmentation
+
+Applying Kmeans at pixel level with different k
+
+```
+python src\segmentation.py
+```
+
+k = 8:
+
+![results/kmeans_8.png](results/kmeans_8.png)
+
+k = 16:
+
+![results/kmeans_16.png](results/kmeans_16.png)
+
+k = 32:
+
+![results/kmeans_32.png](results/kmeans_32.png)
