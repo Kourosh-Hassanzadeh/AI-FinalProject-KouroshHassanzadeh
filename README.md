@@ -189,3 +189,25 @@ SSIM mean: 0.7586
 ![src/AutoEncoder/reconstructed.png](src/AutoEncoder/reconstructed.png)
 
 The first row contains original images. the second row contains noisy image and the third row contains reconstructed images.
+
+# Inference
+
+We write an inference script that takes an input and add noise to it and reconstruct it using our AutoEncoder.
+
+```
+python src\AutoEncoder\inference.py
+```
+
+results:
+
+We tested it on a new data from hand written digits(mnist) and the results is as below:
+
+```
+noise_factor=0.2
+MSE : 0.034839
+MAE : 0.133155
+PSNR: 14.5794
+SSIM: 0.8240
+```
+
+![src/AutoEncoder/test_data.png](src/AutoEncoder/test_data.png)
