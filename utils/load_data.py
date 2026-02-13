@@ -1,5 +1,7 @@
 import cv2
 import os
+from keras.datasets import fashion_mnist
+from sklearn.model_selection import train_test_split
 
 def load_data(path, rgb=False):
     """
@@ -45,3 +47,10 @@ def load_dataSet(path, rgb=False):
         
     return images
         
+def load_mnist():
+
+  (x_train, _), (x_test, _) = fashion_mnist.load_data()
+
+  x_train, x_test = x_train.astype('float32') / 255.0, x_test.astype('float32') / 255.0
+
+  return x_train, x_test

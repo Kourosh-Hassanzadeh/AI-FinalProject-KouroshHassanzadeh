@@ -143,3 +143,30 @@ results:
 ![results/hog2.png](results/hog2.png)
 
 ![results/hog3.png](results/hog3.png)
+
+
+# AutoEncoder for Denoising
+
+data: fashion mnist
+
+![src/AutoEncoder/fashion_mnist.png](src/AutoEncoder/fashion_mnist.png)
+
+we add noise to images:
+
+![src/AutoEncoder/fashion_noise.png](src/AutoEncoder/fashion_noise.png)
+
+
+model architecture:
+
+![src/AutoEncoder/autoencoder_architecture.png](src/AutoEncoder/autoencoder_architecture.png)
+
+we trained it `Adam` optimizer and `MSE` loss function. we trained the model within 10 epochs with early stopping.
+
+```
+python src\AutoEncoder\train.py
+```
+
+final epoch result:
+
+`loss: 0.0071 - val_loss: 0.0072`
+

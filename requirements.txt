@@ -3,3 +3,6 @@ numpy
 matplotlib
 ipykernel
 scikit-image
+keras
+tensorflow
+scikit-learn
