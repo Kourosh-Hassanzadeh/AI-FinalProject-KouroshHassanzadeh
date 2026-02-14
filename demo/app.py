@@ -100,6 +100,7 @@ class ClassicalVisionApp:
                 "شبیه‌سازی و حذف نویز", 
                 "لبه‌یابی (Edge Detection)", 
                 "فیلترهای مکانی و فرکانسی",
+                "قطعه‌بندی (Segmentation)",
                 "آستانه‌گذاری (Thresholding)",
                 "یادگیری عمیق (Auto Encoder)"
             )
@@ -419,6 +420,20 @@ class ClassicalVisionApp:
                     except Exception as e:
                         st.error(f"خطا در حین آموزش: {e}")
 
+    # -------------------------------------------------------------------------
+    # Module 7: Segmentation (K-Means)
+    # -------------------------------------------------------------------------
+    def _handle_segmentation(self) -> None:
+        """Handle UI and logic for K-Means color segmentation."""
+        st.subheader("🎨 قطعه‌بندی تصویر (K-Means Segmentation)")
+        st.info("الگوریتم K-Means پیکسل‌های تصویر را بر اساس مقادیر رنگ (RGB) به K خوشه (Cluster) تقسیم می‌کند.")
+        
+        k = st.slider("تعداد رنگ‌ها (K)", 2, 32, 8)
+        
+        if st.button("اجرای K-Means"):
+            with st.spinner("در حال خوشه‌بندی رنگ‌ها..."):
+                self.result_image = self.processor.segment_kmeans(self.uploaded_image, k)
+
 
     # -------------------------------------------------------------------------
     # Main Execution
@@ -474,8 +489,10 @@ class ClassicalVisionApp:
             self._handle_spatial_frequency()
         elif operation == "آستانه‌گذاری (Thresholding)":
             self._handle_thresholding()
-        elif operation == "یادگیری عمیق (Auto Encoder)":  # <--- اضافه شد
+        elif operation == "یادگیری عمیق (Auto Encoder)":  
             self._handle_autoencoder()
+        elif operation == "قطعه‌بندی (Segmentation)": 
+            self._handle_segmentation()
 
         # Render the final result on the right column if it exists
         if self.result_image is not None:
