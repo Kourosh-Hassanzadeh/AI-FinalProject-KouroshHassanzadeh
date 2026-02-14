@@ -6,3 +6,4 @@ scikit-image
 keras
 tensorflow
 scikit-learn
+streamlit

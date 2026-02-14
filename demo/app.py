@@ -65,16 +65,6 @@ class ClassicalVisionApp:
     def _render_header(self) -> None:
         """Render the main application header and project description."""
         st.title("سامانه هوشمند پردازش تصویر")
-        
-        st.markdown("""
-        <div style="direction: rtl; text-align: right; background-color: #f8f9fa; 
-                    color: #000000; padding: 15px; border-radius: 10px; 
-                    border-right: 5px solid #4CAF50; margin-bottom: 20px;">
-        این دمو جهت ارائه پروژه نهایی درس یادگیری ماشین و پردازش تصویر طراحی شده است.
-        شامل ماژول‌های: <b>حذف نویز</b>، <b>لبه‌یابی پیشرفته</b>، <b>آستانه‌گذاری (Thresholding)</b>، 
-        <b>فیلترهای فرکانسی</b> و <b>HOG</b>.
-        </div>
-        """, unsafe_allow_html=True)
 
     def _render_sidebar(self) -> str:
         """Render the sidebar for file upload and module selection.
@@ -418,7 +408,7 @@ class ClassicalVisionApp:
                         st.error(f"خطا در اجرای مدل: {e}")
 
         else:
-            st.info("آموزش مدل روی دیتاست MNIST.")
+            st.info("آموزش مدل روی دیتاست Fashion MNIST.")
             st.warning("⚠️ لاگ‌های آموزش (Loss و Epochs) در ترمینال (کنسول) نمایش داده می‌شوند.")
             
             if st.button("شروع آموزش (Train)"):

@@ -213,3 +213,14 @@ SSIM: 0.8240
 ```
 
 ![src/AutoEncoder/test_data.png](src/AutoEncoder/test_data.png)
+
+
+# Demo
+
+For running demo:
+
+```
+streamlit run demo/main.py --server.port 9001
+```
+
+* you should pick a free port.
