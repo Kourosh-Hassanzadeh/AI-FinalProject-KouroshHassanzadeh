@@ -1,11 +1,3 @@
-"""Image processing facade that wraps src/ modules for the Streamlit demo.
-
-This module provides a single :class:`ImageProcessor` class whose static
-methods delegate to the lower-level algorithms in ``src/``.  It handles
-colour-space conversions, kernel-size validation, and list-wrapping so
-the UI layer (``app.py``) never has to deal with those details.
-"""
-
 from __future__ import annotations
 
 import sys
@@ -22,15 +14,25 @@ from skimage.feature import hog
 # ---------------------------------------------------------------------------
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 _SRC_PATH = str(_PROJECT_ROOT / "src")
+_AUTOENCODER_PATH = str(_PROJECT_ROOT / "src" / "AutoEncoder")
 
 if _SRC_PATH not in sys.path:
     sys.path.insert(0, _SRC_PATH)
+
+if _AUTOENCODER_PATH not in sys.path:
+    sys.path.insert(0, _AUTOENCODER_PATH)
 
 import denoising  # noqa: E402
 import edge_detection  # noqa: E402
 import segmentation  # noqa: E402
 import spatial_frequency_filters  # noqa: E402
 import thresholding  # noqa: E402
+
+try:
+    from AutoEncoder import train as ae_train
+    from AutoEncoder import inference as ae_inference
+except ImportError as e:
+    print(f"Deep Learning modules skipped or missing TF: {e}")
 
 __all__ = ["ImageProcessor"]
 
@@ -302,3 +304,47 @@ class ImageProcessor:
         if max_val == 0:
             return np.zeros_like(rescaled, dtype=np.uint8)
         return (rescaled / max_val * 255).astype(np.uint8)
+    
+    # ------------------------------------------------------------------
+    # 7. Deep Learning (AutoEncoder)
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def train_autoencoder() -> None:
+        """Run the training loop from train.py (Deep Learning)."""
+        ae_train.train()
+
+    @staticmethod
+    def run_autoencoder_inference(
+        image: np.ndarray, model_path: str, noise_factor: float
+    ) -> dict:
+        """Run inference using the custom DenoiseAutoencoder.
+
+        Writes the in-memory numpy array to a temporary PNG file so 
+        `inference.py` can load it using `tf.io.read_file`, then cleans it up.
+        """
+        import tempfile
+        import os
+        from PIL import Image
+
+        # Create a temporary file
+        temp_fd, temp_path = tempfile.mkstemp(suffix=".png")
+        os.close(temp_fd)
+        
+        try:
+            # Save the in-memory image to the temp file
+            Image.fromarray(image).save(temp_path)
+            
+            # Call the exact function from your inference.py
+            result = ae_inference.inference(
+                model_path=model_path,
+                image_path=temp_path,
+                noise_factor=noise_factor,
+                show=False,       # جلوگیری از باز شدن پاپ‌آپ Matplotlib در سرور
+                save_dir=None     # جلوگیری از ذخیره فایل اضافه
+            )
+            return result
+        finally:
+            # Clean up the temporary file
+            if os.path.exists(temp_path):
+                os.remove(temp_path)

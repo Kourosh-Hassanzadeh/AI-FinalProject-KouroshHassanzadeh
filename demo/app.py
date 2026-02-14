@@ -110,7 +110,8 @@ class ClassicalVisionApp:
                 "شبیه‌سازی و حذف نویز", 
                 "لبه‌یابی (Edge Detection)", 
                 "فیلترهای مکانی و فرکانسی",
-                "آستانه‌گذاری (Thresholding)"
+                "آستانه‌گذاری (Thresholding)",
+                "یادگیری عمیق (Auto Encoder)"
             )
         )
         
@@ -348,6 +349,87 @@ class ClassicalVisionApp:
                 st.success(f"Otsu calculated optimal threshold: {val}")
                 self.result_image = res
 
+
+
+    # -------------------------------------------------------------------------
+    # Module 6: Deep Learning (AutoEncoder)
+    # -------------------------------------------------------------------------
+    def _handle_autoencoder(self) -> None:
+        """Handle UI and logic for Deep Learning AutoEncoder training and inference."""
+        st.subheader("🧠 یادگیری عمیق (Denoising AutoEncoder)")
+        
+        mode = st.radio(
+            "انتخاب عملیات:", 
+            ["تست مدل (Inference)", "آموزش شبکه (Train Model)"], 
+            horizontal=True
+        )
+        
+        if mode == "تست مدل (Inference)":
+            st.info("در این بخش از مدل از پیش آموزش‌دیده برای حذف نویز استفاده می‌شود.")
+            
+            # پیدا کردن مسیر پیش‌فرض مدل شما (با توجه به آدرسی که در کد دادید)
+            project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            default_model_path = os.path.join(
+                project_root, "models", "denoiser_epoch_10_valLoss_0.0075.keras"
+            )
+            
+            model_path = st.text_input("مسیر فایل مدل (Keras):", value=default_model_path)
+            noise_factor = st.slider("Noise Factor", 0.0, 1.0, 0.2, step=0.05)
+            
+            if st.button("اجرای شبکه عصبی (Inference)"):
+                if not os.path.exists(model_path):
+                    st.error("❌ مدل در مسیر مشخص شده یافت نشد! لطفاً مسیر را بررسی کنید.")
+                    return
+                    
+                if self.uploaded_image is None:
+                    st.warning("👈 لطفاً ابتدا یک تصویر آپلود کنید.")
+                    return
+                    
+                with st.spinner("در حال پردازش توسط شبکه عصبی (TensorFlow)..."):
+                    try:
+                        results = self.processor.run_autoencoder_inference(
+                            self.uploaded_image, model_path, noise_factor
+                        )
+                        
+                        # خروجی‌های مدل در بازه [0, 1] هستند و سایز (28, 28, 1) دارند
+                        c1, c2, c3 = st.columns(3)
+                        with c1:
+                            st.image(results["clean"].squeeze(), caption="Original (28x28)", clamp=True)
+                        with c2:
+                            st.image(results["noisy"].squeeze(), caption="Noisy Input", clamp=True)
+                        with c3:
+                            st.image(results["denoised"].squeeze(), caption="Denoised Output", clamp=True)
+                            
+                        # نمایش معیارهای ارزیابی (Metrics)
+                        st.markdown("#### نتایج ارزیابی (Metrics)")
+                        m = results["metrics"]
+                        st.success(
+                            f"**MSE:** {m['mse']:.6f} &nbsp;|&nbsp; "
+                            f"**MAE:** {m['mae']:.6f} &nbsp;|&nbsp; "
+                            f"**PSNR:** {m['psnr']:.4f} &nbsp;|&nbsp; "
+                            f"**SSIM:** {m['ssim']:.4f}"
+                        )
+                        
+                        # آماده‌سازی تصویر برای دانلود (تبدیل به 0-255 و فرمت uint8)
+                        denoised_uint8 = (results["denoised"].squeeze() * 255).astype(np.uint8)
+                        self.result_image = denoised_uint8
+                        
+                    except Exception as e:
+                        st.error(f"خطا در اجرای مدل: {e}")
+
+        else:
+            st.info("آموزش مدل روی دیتاست MNIST.")
+            st.warning("⚠️ لاگ‌های آموزش (Loss و Epochs) در ترمینال (کنسول) نمایش داده می‌شوند.")
+            
+            if st.button("شروع آموزش (Train)"):
+                with st.spinner("در حال آموزش شبکه عصبی... لطفاً به ترمینال مراجعه کنید."):
+                    try:
+                        self.processor.train_autoencoder()
+                        st.success("✅ آموزش با موفقیت انجام شد! فایل‌های مدل در پوشه models ذخیره شدند.")
+                    except Exception as e:
+                        st.error(f"خطا در حین آموزش: {e}")
+
+
     # -------------------------------------------------------------------------
     # Main Execution
     # -------------------------------------------------------------------------
@@ -402,6 +484,8 @@ class ClassicalVisionApp:
             self._handle_spatial_frequency()
         elif operation == "آستانه‌گذاری (Thresholding)":
             self._handle_thresholding()
+        elif operation == "یادگیری عمیق (Auto Encoder)":  # <--- اضافه شد
+            self._handle_autoencoder()
 
         # Render the final result on the right column if it exists
         if self.result_image is not None:
